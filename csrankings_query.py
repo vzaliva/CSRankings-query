@@ -599,6 +599,7 @@ def render_plain_text(results: list[dict[str, Any]]) -> str:
                 header_lines
                 + [
                     matched_line,
+                    f'Matched country: {result["matched_country_name"]}',
                     f'Conferences:  {", ".join(result["conferences"])}',
                     f'Publications: {result["publications"]}',
                     rank_line,
@@ -700,9 +701,16 @@ def main() -> int:
     results: list[dict[str, Any]] = []
     for matched_institution, score in matches:
         publications = institution_scores.get(matched_institution, 0)
+        matched_country_code = institution_to_country.get(matched_institution, "")
+        matched_country_name = country_names.get(
+            matched_country_code,
+            matched_country_code.upper() if matched_country_code else "Unknown",
+        )
         result: dict[str, Any] = {
             "query": args.university_name,
             "matched_institution": matched_institution,
+            "matched_country": matched_country_code.upper() if matched_country_code else None,
+            "matched_country_name": matched_country_name,
             "match_score": round(score, 1),
             "conferences": canonical_conferences,
             "publications": publications,
@@ -716,7 +724,12 @@ def main() -> int:
         results.append(result)
 
     if args.emit_json:
-        json.dump(results, sys.stdout, indent=2)
+        json_results = []
+        for result in results:
+            json_result = dict(result)
+            json_result.pop("matched_country_name", None)
+            json_results.append(json_result)
+        json.dump(json_results, sys.stdout, indent=2)
         sys.stdout.write("\n")
     else:
         print(render_plain_text(results))

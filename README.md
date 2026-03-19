@@ -121,4 +121,6 @@ If a non-required fetch fails and no cache is available, the script warns and sk
 
 Default output is plain text. Use `--json` for machine-readable output.
 
+Each result includes the matched institution's country. Plain-text output shows the country name, while JSON output uses the ISO alpha-2 country code when available.
+
 Warnings are written to `stderr` so JSON output on `stdout` stays clean.
