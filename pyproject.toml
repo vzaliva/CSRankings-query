@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csrankings-query"
+version = "0.1.0"
+description = "CLI for querying CSRankings publication counts by institution and conference venue."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "requests",
+  "pandas",
+  "rapidfuzz",
+]
+
+[project.scripts]
+csrankings-query = "csrankings_query:main"
+
+[tool.setuptools]
+py-modules = ["csrankings_query"]
